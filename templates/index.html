@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+<title>GBUS 정보</title>
+
+{% endblock %}
+
+{% block content %}
+
+<h1>경기도 버스 검색</h1>
+<form action="/search">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="노선 번호 또는 정류소 입력" name="q" aria-label="Recipient's username" aria-describedby="button-addon2">
+        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">검색</button>
+    </div>
+</form>
+
+{% endblock %}

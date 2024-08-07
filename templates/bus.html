@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+<title>GBUS 정보 - {{ routeNm }}번 버스</title>
+
+{% endblock %}
+
+{% block content %}
+
+<h1><span style="border-radius: 5%; background-color: {{ bgColor }}; color: {{txtColor}}; padding: 0.2rem; margin: 0.1rem;">{{ routeNm }}</span>번 버스</h1>
+<h5 style="color: gray;">{{ type }}</h5>
+<button type="button" class="btn btn-danger" onclick="window.close()">창 닫기</button>
+<hr>
+<div style="text-align: left;">
+    {% if startARS %}
+        <h5>기점: {{ startNm }} ({{ startARS }})</h5>
+    {% else %}
+        <h5>기점: {{ startNm }}</h5>
+    {% endif %}
+    {% if endARS %}
+        <h5>종점: {{ endNm }} ({{ endARS }})</h5>
+    {% else %}
+        <h5>종점: {{ endNm }}</h5>
+    {% endif %}
+    <h5>운행 지역: {{ region }}</h5>
+    <br>
+    <h5>첫차: {{ startFirst }} (기점) {{ startLast }} (종점)</h5>
+    <h5>막차: {{ endFirst }} (기점) {{ endLast }} (종점)</h5>
+    <br>
+    {% if minInter == maxInter %}
+        <h5>배차간격: {{ minInter }}분</h5>
+    {% else %}
+        <h5>배차간격: {{ minInter }} ~ {{ maxInter }}분</h5>
+    {% endif %}
+    <br>
+    <h5>운수사: {{ companyNm }} (전화번호: {{ companyTel }})</h5>
+</div>
+<div style="text-align: left;">
+    <hr>
+    <h2>정차 정류소</h2>
+    {% for stop in stops %}
+        {% if stop.isTurn == "Y" %}
+            <div style="background-color: rgb(255, 255, 166); padding: 0.5rem;">
+                <h4><a href="/stop?id={{ stop.stopId }}&ars={{ stop.stopARS }}&nm={{ stop.stopNm }}" target="_blank" style="color: black; text-decoration: none;">{{ stop.stopNm }} (회차)</a></h4>
+        {% else %}
+            <div style="padding: 0.5rem;">
+                {% if "(경유)" in stop.stopNm %}
+                    <h4 style="color: gray;">{{ stop.stopNm }}</h4>
+                {% else %}
+                    <h4><a href="/stop?id={{ stop.stopId }}&ars={{ stop.stopARS }}&nm={{ stop.stopNm }}" target="_blank" style="color: black; text-decoration: none;">{{ stop.stopNm }}</a></h4>
+                {% endif %}
+        {% endif %}
+            {% if stop.stopARS %}
+                <h6 style="color: gray;">{{ stop.stopARS }} • {{ stop.region }}</h6>
+            {% else %}
+                <h6 style="color: gray;">{{ stop.region }}</h6>
+            {% endif %}
+
+            {% if "(경유)" not in stop.stopNm or stop.isTurn == "Y" %}
+                <a type="button" class="btn btn-primary" target="_blank" href="/stop?id={{ stop.stopId }}&ars={{ stop.stopARS }}&nm={{ stop.stopNm }}">정류소 보기</a>
+            {% endif %}
+        </div>
+        <hr>
+    {% endfor %}
+</div>
+
+{% endblock %}

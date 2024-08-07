@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+<title>GBUS 정보 - {{ q }} 검색</title>
+
+{% endblock %}
+
+{% block content %}
+
+<h1>경기도 버스 검색</h1>
+<form action="/search">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="노선 번호 또는 정류소 입력" value="{{ q }}" name="q" aria-label="Recipient's username" aria-describedby="button-addon2">
+        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">검색</button>
+    </div>
+</form>
+
+<div class="tab_content">
+
+	<input type="radio" name="tabmenu" id="tab01" checked>
+	<label for="tab01">버스 검색</label>
+	<input type="radio" name="tabmenu" id="tab02">
+	<label for="tab02">정류소 검색</label>
+
+    <!-- 버스 검색 -->
+	<div class="conbox con1">
+        {% if busLen == 0 %}
+            <h2>검색 결과가 없습니다.</h2>
+        {% else %}
+            <hr>
+            {% for bus in buses %}
+                <div>
+                    <h2><a target="_blank" style="background-color: {{ bus.bgColor }}; color: {{ bus.txtColor }}; text-decoration: none;" href="/bus?id={{ bus.routeID }}">{{ bus.routeNm }}</a></h2>
+                    <h5>{{ bus.type }}</h5>
+                    <h6>운행 지역: {{ bus.region }}</h6>
+                    <a type="button" class="btn btn-primary" target="_blank" href="/bus?id={{ bus.routeID }}">정보 보기</a>
+                    <hr>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- 정류소 검색 -->
+	<div class="conbox con2">
+        {% if stopLen == 0 %}
+            <h2>검색 결과가 없습니다.</h2>
+        {% else %}
+            <hr>
+            {% for stop in stops %}
+                <div>
+                    <h2><a target="_blank" style="color: black; text-decoration: none;" href="/stop?id={{ stop.stopID }}&ars={{ stop.stopARS }}&nm={{ stop.stopNm }}">{{ stop.stopNm }}</a></h2>
+                    <h5>{{ stop.stopARS }}</h5>
+                    <h6>지역: {{ stop.region }}</h6>
+                    <a type="button" class="btn btn-primary" target="_blank" href="/stop?id={{ stop.stopID }}&ars={{ stop.stopARS }}&nm={{ stop.stopNm }}">정보 보기</a>
+                    <hr>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+</div>
+
+<style>
+    * {margin:0;padding:0;border:0;}
+    
+    .tab_content {text-align:center;font-size:0;}
+    input[type="radio"] {display:none;}
+    input[type="radio"] + label {display:inline-block;padding:20px;color:#999;font-size:14px;cursor:pointer;}
+    input[type="radio"]:checked + label {background:#999;color:#000;}
+    
+    .conbox {height:600px;margin:0 20px;display:none;text-align:left;font-size:12px;padding:20px;box-sizing:border-box;} 
+    input[id="tab01"]:checked ~ .con1 {display:block;}
+    input[id="tab02"]:checked ~ .con2 {display:block;}
+</style>
+
+{% endblock %}
